@@ -1,4 +1,7 @@
 import * as React from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useRouter } from "next/router";
+
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -29,6 +32,16 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -63,17 +76,53 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
+
+  function handleGenderSelect(gender: string) {
+    const params = new URLSearchParams(searchParams);
+
+    if (gender) {
+      params.set("gender", gender);
+    } else {
+      params.delete("query");
+    }
+
+    replace(`${pathname}?${params.toString()}`);
+  }
+
   return (
     <div>
       <div className="flex items-center py-4">
-        <Input
-          placeholder="Search by name..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
+        <div className="flex space-x-2">
+          <Input
+            placeholder="Search by name..."
+            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("name")?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+
+          <Select
+            onValueChange={(value) => handleGenderSelect(value)}
+            value={searchParams.get("gender")?.toString()}
+          >
+            <SelectTrigger className="w-[250px]">
+              <SelectValue placeholder="Select a gender" />
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Genders</SelectLabel>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="male">Male</SelectItem>
+                <SelectItem value="female">Female</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

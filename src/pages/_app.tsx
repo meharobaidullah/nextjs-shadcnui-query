@@ -4,7 +4,6 @@ import { Inter as FontSans } from "next/font/google";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { cn } from "@/lib/utils";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -26,12 +25,15 @@ export const fontSans = FontSans({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <main
-      className={cn(
-        "min-h-screen bg-background font-sans antialiased",
-        fontSans.variable
-      )}
-    >
+    <main className="min-h-screen bg-background font-sans antialiased">
+      <style jsx global>
+        {`
+          :root {
+            --font-sans: ${fontSans.variable};
+          }
+        `}
+      </style>
+
       <QueryClientProvider client={queryClient}>
         <Component {...pageProps} />
 

@@ -1,14 +1,25 @@
 import { DataTable } from "@/components/data-table";
 import { columns } from "@/components/user-columns";
 import { getAllUsers } from "@/services/userServices";
-import { User } from "@/types/users";
+import { Gender, User } from "@/types/users";
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { useLocalStorage } from "usehooks-ts";
 
 export default function Home() {
+  const searchParams = useSearchParams();
+  const gender = searchParams.get("gender") as Gender;
+  const [, setUsers] = useLocalStorage<User[] | null>("users", null);
+
   const { data } = useQuery<User[], Error>({
-    queryKey: ["users"],
-    queryFn: getAllUsers,
+    queryKey: ["users", gender],
+    queryFn: async () => await getAllUsers(gender),
   });
+
+  useEffect(() => {
+    setUsers(data ?? []);
+  }, [data]);
 
   return (
     <div className="container mx-auto py-10">

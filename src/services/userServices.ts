@@ -1,5 +1,5 @@
 import axios from "axios";
-import { User, UserResponse } from "@/types/users";
+import { Gender, UserResponse } from "@/types/users";
 
 const apiClient = axios.create({
   baseURL: "https://randomuser.me/api",
@@ -8,10 +8,14 @@ const apiClient = axios.create({
   },
 });
 
-const getAllUsers = async () => {
+const getAllUsers = async (gender?: Gender) => {
+  const isHaveValidGender = gender === "female" || gender === "male";
+  const filterString = isHaveValidGender ? `&gender=${gender}` : "";
+
   const response = await apiClient.get<UserResponse>(
-    "/?inc=id,name,email,gender&results=100"
+    `/?inc=id,name,email,gender&results=100${filterString}`
   );
+
   return response.data?.results;
 };
 

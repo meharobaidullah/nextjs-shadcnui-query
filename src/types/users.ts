@@ -9,6 +9,8 @@ interface Name {
   title: string;
 }
 
+export type Gender = "male" | "female" | "all";
+
 export interface User {
   id: ID;
   name: Name;

@@ -1,9 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
-
+import { ArrowUpDown, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
 import { User } from "@/types/users";
+import Link from "next/link";
 
 export const columns: ColumnDef<User>[] = [
   {
@@ -46,6 +45,21 @@ export const columns: ColumnDef<User>[] = [
           Gender
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
+      );
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const userEmail = row.original.email;
+
+      return (
+        <Link href={`/user/${userEmail}`}>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <Eye className="h-5 w-5" />
+          </Button>
+        </Link>
       );
     },
   },
