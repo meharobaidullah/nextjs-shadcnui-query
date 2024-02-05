@@ -13,8 +13,6 @@ export default function Home() {
 
   const user = (users || []).find((user) => user.email === email);
 
-  console.log({ users, email }, user);
-
   return (
     <div className="container mx-auto py-10">
       <div className="border-b flex justify-between mb-2">
@@ -30,7 +28,20 @@ export default function Home() {
         </Link>
       </div>
 
-      <div>{JSON.stringify(user)}</div>
+      <div className="bg-white shadow rounded p-10">
+        <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+          {user?.name?.first} {user?.name?.last}
+        </h2>
+
+        <p className="leading-7 [&:not(:first-child)]:mt-3">
+          {" "}
+          <span className="font-bold">Gender:</span> {user?.gender}
+        </p>
+        <p className="leading-7 [&:not(:first-child)]:mt-3">
+          <span className="font-bold">Email:</span>
+          {user?.email}
+        </p>
+      </div>
     </div>
   );
 }
