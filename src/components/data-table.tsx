@@ -42,15 +42,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  loading?: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  loading = false,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -173,7 +176,17 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {!!loading ? (
+              Array.from({ length: 10 }).map((_, index) => (
+                <TableRow key={`skeleton-${index}`}>
+                  {columns.map((column, columnIndex) => (
+                    <TableCell key={`skeleton-cell-${columnIndex}`}>
+                      <Skeleton className="h-8" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}

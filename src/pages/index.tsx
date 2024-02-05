@@ -12,7 +12,7 @@ export default function Home() {
   const gender = searchParams.get("gender") as Gender;
   const [, setUsers] = useLocalStorage<User[] | null>("users", null);
 
-  const { data } = useQuery<User[], Error>({
+  const { data, isLoading } = useQuery<User[], Error>({
     queryKey: ["users", gender],
     queryFn: async () => await getAllUsers(gender),
   });
@@ -27,7 +27,7 @@ export default function Home() {
         Users
       </h1>
 
-      <DataTable data={data || []} columns={columns} />
+      <DataTable data={data || []} columns={columns} loading={isLoading} />
     </div>
   );
 }
